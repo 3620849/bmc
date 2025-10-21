@@ -21,7 +21,7 @@ export class DepartmentFlowComponent implements AfterViewInit,OnDestroy, OnInit 
   }
   @ViewChild('Kanban') public kanban?: KanbanComponent;
   public dataManager?: DataManager;
-  public data: Object[] = kanbanData;
+  //public data: Object[] = kanbanData;
   public cardSettings: CardSettingsModel = {
     contentField: 'Summary',
     headerField: 'Id'
@@ -41,7 +41,7 @@ export class DepartmentFlowComponent implements AfterViewInit,OnDestroy, OnInit 
   subscribeOnSearch (){
     let searchQuery: Query = new Query();
     this.searchService.searchValue.subscribe(value => {
-      searchQuery = new Query().search(value, ['Id', 'Summary'], 'contains', true);
+      searchQuery = new Query().search(value, ['Id', 'Name', "Doctor"], 'contains', true);
       (this.kanban as KanbanComponent).query = searchQuery;
     })
   }

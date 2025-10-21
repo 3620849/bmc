@@ -6,8 +6,8 @@ export interface Patient {
   Summary:string;
   Priority:'Critical'| 'Urgent'| 'Standard'| 'Routine';
   Records:[],
-  Doctor:number
-  Bed:number;
+  Doctor:string,
+  Bed:string;
 }
 export let kanbanData: Patient[] = [
   {
@@ -18,8 +18,8 @@ export let kanbanData: Patient[] = [
     Summary: 'Analyze the new requirements gathered from the customer.',
     Priority: 'Critical',
     Records:[],
-    Doctor:1,
-    Bed:1,
+    Doctor:"Roi",
+    Bed:'A1',
   },
   {
     Id: 2,
@@ -29,8 +29,8 @@ export let kanbanData: Patient[] = [
     Summary: 'Analyze the new requirements gathered from the customer.',
     Priority: 'Critical',
     Records:[],
-    Doctor:1,
-    Bed:1,
+    Doctor:'Burger',
+    Bed:"A2",
   },
   {
     Id: 3,
@@ -40,8 +40,8 @@ export let kanbanData: Patient[] = [
     Summary: 'Analyze the new requirements gathered from the customer.',
     Priority: 'Critical',
     Records:[],
-    Doctor:1,
-    Bed:1,
+    Doctor:"Roi",
+    Bed:"B1",
   }
 ];
 
