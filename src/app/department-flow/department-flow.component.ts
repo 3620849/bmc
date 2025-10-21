@@ -42,9 +42,9 @@ export class DepartmentFlowComponent implements AfterViewInit,OnDestroy, OnInit 
     })
   }
 
-  openPatientCard($data:any){
-    console.log($data);
-    this.dialogSrv.showDialog($data,true);
+  openPatientCard($data:Patient){
+    console.log($data)
+    this.dialogSrv.showDialog({type:"Patient", data:$data},true);
   }
 
   clickItem( args: DialogEventArgs): void {

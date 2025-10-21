@@ -5,17 +5,19 @@ import {DialogComponent, DialogModule, PositionDataModel} from '@syncfusion/ej2-
 import {DialogService} from './shared/services/dialog.service';
 import {PatientComponent} from './patient/patient.component';
 import {PatientStore} from './shared/store/patient.store';
+import {Entity, Patient} from './datasource';
+import {CommonModule} from '@angular/common';
 
 @Component({
   selector: 'app-root',
-  imports: [AppbarmenuComponent, RouterOutlet, DialogModule, PatientComponent],
+  imports: [AppbarmenuComponent, RouterOutlet, DialogModule, PatientComponent,CommonModule],
   templateUrl: './app.component.html',
   standalone: true,
   styleUrl: './app.component.scss'
 })
 export class AppComponent implements OnInit {
   public patientStore = inject(PatientStore);
-  patient = signal<any>(null);
+  entity = signal<{ type:'Patient'|'Staff', data:Entity|Patient|undefined }>({ type:'Patient', data:undefined });
   @ViewChild('ejDialog') ejDialog: DialogComponent | any;
   constructor(private dialogService:DialogService) {
   }
@@ -26,7 +28,7 @@ export class AppComponent implements OnInit {
         value ? this.ejDialog.show() : this.ejDialog.hide();
       })
     this.dialogService.dialogData.subscribe(value => {
-      this.patient.set(value)})
+      this.entity.set(value)})
   }
 
 

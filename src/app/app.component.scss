@@ -8,9 +8,13 @@
   border: 1px solid black;
   height: calc( 100% - 2px);
 }
+#dialog{
+  min-height: fit-content;
+}
 #dialog-container{
   position: absolute;
-  top: 50px;
-  left: 50%;
-  height: 400px
+  top: -100px;
+  left: calc(50% - 200px);
+  height: 400px;
+  width: 400px;
 }

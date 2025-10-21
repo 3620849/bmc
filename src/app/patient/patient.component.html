@@ -1,1 +1,54 @@
-<p>{{ data()|json }}</p>
+<div class="patient-edit-container">
+  <h2>Edit Patient Details</h2>
+  <div *ngIf="patientForm">
+    <form [formGroup]="patientForm" (ngSubmit)="onSubmit()">
+
+      <div class="e-float-input e-control-wrapper">
+        <ejs-textbox placeholder="ID"  [formControlName]="'Id'" floatLabelType="Auto"></ejs-textbox>
+      </div>
+
+      <div class="e-float-input e-control-wrapper">
+        <ejs-textbox placeholder="Name"  [formControlName]="'Name'" floatLabelType="Auto"></ejs-textbox>
+        <div *ngIf="patientForm.get('Name')?.invalid && patientForm.get('Name')?.touched" class="e-error">
+          Name is required.
+        </div>
+      </div>
+
+      <div class="e-float-input e-control-wrapper">
+        <ejs-dropdownlist [dataSource]="statusData" placeholder="Status"  [formControlName]="'Status'"
+                          floatLabelType="Auto">
+        </ejs-dropdownlist>
+      </div>
+
+      <div class="e-float-input e-control-wrapper">
+        <ejs-dropdownlist [dataSource]="patientStatusData" placeholder="Patient Status"
+                          [formControlName]="'PatientStatus'" floatLabelType="Auto">
+        </ejs-dropdownlist>
+      </div>
+
+      <div class="e-float-input e-control-wrapper">
+        <ejs-dropdownlist [dataSource]="priorityData" placeholder="Priority"  [formControlName]="'Priority'"
+                          floatLabelType="Auto">
+        </ejs-dropdownlist>
+      </div>
+
+      <div class="e-float-input e-control-wrapper">
+        <ejs-dropdownlist [dataSource]="doctorData" placeholder="Doctor"  [formControlName]="'Doctor'"
+                          floatLabelType="Auto">
+        </ejs-dropdownlist>
+      </div>
+
+      <div class="e-float-input e-control-wrapper">
+        <ejs-textbox placeholder="Bed"  [formControlName]="'Bed'" floatLabelType="Auto"></ejs-textbox>
+      </div>
+
+      <div class="e-float-input e-control-wrapper">
+        <ejs-textbox placeholder="Summary"  [formControlName]="'Summary'" floatLabelType="Auto" multiline="true"
+                     rows="2">
+        </ejs-textbox>
+      </div>
+      <button type="submit" [disabled]="!patientForm.valid" ejs-button cssClass="e-flat" content="OK"></button>
+    </form>
+  </div>
+
+</div>

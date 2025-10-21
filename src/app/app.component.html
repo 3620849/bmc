@@ -1,20 +1,21 @@
-<app-appbarmenu></app-appbarmenu>
-<router-outlet></router-outlet>
 <div id="dialog-container">
-  <ejs-dialog id='dialog' [position]="position" [visible]="false" #ejDialog target="#dialog-container" [showCloseIcon]='true' content='This is a Dialog content'
-              width='400px'>
+  <ejs-dialog id='dialog' [position]="position" [visible]="false" #ejDialog target="#dialog-container" [showCloseIcon]='true' content='This is a Dialog content'>
+    <ng-template #header>
+      <div title="Nancy" class="e-icon-settings dlg-template"> {{ entity().data?.Name }} </div>
+    </ng-template>
     <ng-template #footerTemplate>
-      <input id="inVal" class="e-input" type="text" placeholder="Enter your message here!"/>
-      <button id="sendButton" class="e-control e-btn e-primary sendButton" data-ripple="true">Send</button>
+
     </ng-template>
     <ng-template #content>
       <div class="dialogContent">
-        <app-patient [data]="patient()"></app-patient>
+        @if (entity().type==='Patient'){
+          <app-patient [patientData]="entity().data"></app-patient>
+        }
       </div>
     </ng-template>
-    <ng-template #header>
 
-      <div title="Nancy" class="e-icon-settings dlg-template"> Nancy </div>
-    </ng-template>
   </ejs-dialog>
 </div>`
+
+<app-appbarmenu></app-appbarmenu>
+<router-outlet></router-outlet>

@@ -1,6 +1,8 @@
-export interface Patient {
+export interface Entity {
   Id:number;
   Name:string;
+}
+export interface Patient extends Entity {
   Status: 'Emergency'|'ICU'|'General Ward'|'Outpatient'|'Radiology',
   PatientStatus:'Admission'|'In Treatment'| 'Waiting'| 'Discharged'| 'Critical'
   Summary:string;
