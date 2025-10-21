@@ -128,7 +128,6 @@ export class PatientComponent implements OnInit {
     if(event && event.data){
       event.data.UpdateAt=this.getDate();
     }
-    console.log(event)
   }
   getDate(){
     const d = new Date();

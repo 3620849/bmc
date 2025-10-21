@@ -1,53 +1,59 @@
-import {AfterViewInit, Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
+import {AfterViewInit, Component, effect, inject, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {GridComponent, GridModule} from '@syncfusion/ej2-angular-grids';
-import {kanbanData} from '../datasource';
+import {Entity, kanbanData, Patient} from '../datasource';
 import {CardSettingsModel, KanbanComponent} from '@syncfusion/ej2-angular-kanban';
 import {DataManager, Query} from '@syncfusion/ej2-data';
-import {Subscription} from 'rxjs';
+import {Subject, Subscription, takeUntil} from 'rxjs';
 import {PatientsService} from '../shared/services/patients.service';
 import {SearchService} from '../shared/services/search.service';
+import {PatientStore} from '../shared/store/patient.store';
+import {getState} from '@ngrx/signals';
+import {DialogService} from '../shared/services/dialog.service';
+import {JsonPipe} from '@angular/common';
 
 @Component({
   selector: 'app-patient-list',
-  imports: [GridModule],
+  imports: [GridModule, JsonPipe],
   standalone: true,
   templateUrl: './patient-list.component.html',
   styleUrl: './patient-list.component.scss'
 })
-export class PatientListComponent implements AfterViewInit,OnDestroy, OnInit {
+export class PatientListComponent implements OnDestroy, OnInit {
 
   @ViewChild('grid') public grid?: GridComponent;
+  private $destroy = new Subject<boolean>();
 
-  ngAfterViewInit(): void {
-    this.loadData();
-    this.subscribeOnSearch();
-  }
-public dataManager?: DataManager;
+public dataList: Patient[] =[];
+
 
 private subscriptions: Subscription[] = [];
-
-  constructor(private patientService:PatientsService, private searchService: SearchService) {
-  }
-
-  ngOnInit(): void {
-
+  public patientStore = inject(PatientStore);
+  constructor(private searchService: SearchService, private dialogSrv:DialogService) {
+    effect(() => {
+      const state = getState(this.patientStore);
+      this.dataList = JSON.parse(JSON.stringify(state.patients))
+    });
   }
 
   ngOnDestroy(): void {
-    this.subscriptions.forEach(subscription => subscription.unsubscribe());
+       this.$destroy.next(true);
+    }
+
+  ngOnInit(): void {
+    this.subscribeOnSearch ()
   }
+
   subscribeOnSearch (){
     let searchQuery: Query = new Query();
-    this.searchService.searchValue.subscribe(value => {
+    this.searchService.searchValue.pipe(takeUntil(this.$destroy)).subscribe(value => {
       searchQuery = new Query().search(value, ['Id', 'Name', "Doctor","Status"], 'contains', true);
       (this.grid as GridComponent).query = searchQuery;
     })
   }
-  loadData () {
-    this.patientService.loadPatients();
-    this.subscriptions.push(this.patientService.patientsData.subscribe((res)=>{
-      const grid: GridComponent  = this.grid as GridComponent;
-      grid.dataSource = res;
-    }))
+
+  doubleClick(e:any){
+    const patient = this.dataList.find(patient=>patient.Id === e.rowData.Id) as Entity;
+    this.dialogSrv.showDialog({type:'Patient',data:patient},true);
   }
+
 }

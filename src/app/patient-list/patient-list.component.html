@@ -1,3 +1,20 @@
 <div class="patients-list-component">
-  <ejs-grid #grid [dataSource]='dataManager'> </ejs-grid>
+  <ejs-grid #grid [dataSource]='dataList' [allowSorting]='true' (recordDoubleClick)="doubleClick($event)">
+    <e-columns>
+      <e-column field='Id' headerText='Id' textAlign='Right' width=100></e-column>
+      <e-column field='Name' headerText='Name' textAlign='Right' width=100></e-column>
+      <e-column field='Status' headerText='Status' textAlign='Right' width=100></e-column>
+      <e-column field='PatientStatus' headerText='PatientStatus' textAlign='Right' width=100></e-column>
+      <e-column field='Summary' headerText='Summary' textAlign='Right' width=100></e-column>
+      <e-column field='Priority' headerText='Priority' textAlign='Right' width=100></e-column>
+      <e-column field='Doctor' headerText='Doctor' textAlign='Right' width=100></e-column>
+      <e-column field='Bed' headerText='Bed' textAlign='Right' width=100></e-column>
+      <e-column field='Records' headerText='Records' textAlign='Right' width=100>
+        <ng-template #template let-data>
+          <span>{{data.Records.length}}</span>
+        </ng-template>
+      </e-column>
+    </e-columns>
+  </ejs-grid>
 </div>
+
