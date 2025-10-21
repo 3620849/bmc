@@ -39,7 +39,7 @@ export class PatientComponent implements OnInit {
   statusData: string[] = ['ICU', 'General Ward', 'Discharged'];
   patientStatusData: string[] = ['Waiting', 'Treated', 'On Hold'];
   priorityData: string[] = ['Critical', 'High', 'Medium', 'Low'];
-  doctorData: string[] = ['Burger', 'Stevens', 'Smith']; // Example list of doctors
+  doctorData: string[] = ['Burger', 'Roi', 'Smith']; // Example list of doctors
 
   constructor(private fb: FormBuilder) {
     effect(() => {
