@@ -23,6 +23,13 @@ export const PatientStore = signalStore(
       error:()=>{
         patchState(store,{patients : [],loading:false});
       }})
+    },
+    updatePatient (patient: Patient) {
+      // Find patient by id and replace it with patient
+      const updatedPatients = store.patients().map(p =>
+        p.Id === patient.Id ? patient : p
+      );
+      patchState(store,{patients:updatedPatients,loading:false});
     }
   }))
 )

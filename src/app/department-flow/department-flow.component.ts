@@ -59,6 +59,9 @@ export class DepartmentFlowComponent implements AfterViewInit,OnDestroy, OnInit 
     args.cancel = true; //cancel default kanban behaviour show popup to edit item
   }
   changeData(event:any){
-    console.log(event);
+    if(event && event.changedRecords[0]){
+      console.log(event.changedRecords[0])
+      this.patientStore.updatePatient(event.changedRecords[0]);
+    }
   }
 }
