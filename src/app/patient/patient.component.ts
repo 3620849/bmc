@@ -1,4 +1,4 @@
-import {Component, computed, effect, input, OnInit} from '@angular/core';
+import {Component, computed, effect, inject, input, OnInit} from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser'
 import {NgIf} from '@angular/common';
 import {Entity, Patient} from '../datasource';
@@ -14,6 +14,8 @@ import {
 import {DropDownListModule} from '@syncfusion/ej2-angular-dropdowns';
 import { ButtonModule } from '@syncfusion/ej2-angular-buttons'
 import {TextBoxAllModule} from '@syncfusion/ej2-angular-inputs';
+import {PatientStore} from '../shared/store/patient.store';
+import {DialogService} from '../shared/services/dialog.service';
 
 @Component({
   selector: 'app-patient',
@@ -36,12 +38,12 @@ export class PatientComponent implements OnInit {
   patientData=input<Entity|Patient|undefined>();
 
   // Dropdown list data sources (example values)
-  statusData: string[] = ['ICU', 'General Ward', 'Discharged'];
-  patientStatusData: string[] = ['Waiting', 'Treated', 'On Hold'];
-  priorityData: string[] = ['Critical', 'High', 'Medium', 'Low'];
-  doctorData: string[] = ['Burger', 'Roi', 'Smith']; // Example list of doctors
-
-  constructor(private fb: FormBuilder) {
+  statusData: string[] = ['Emergency','ICU','General Ward','Outpatient','Radiology'];
+  patientStatusData: string[] = ['Admission','In Treatment', 'Waiting', 'Discharged', 'Critical'];
+  priorityData: string[] = ['Critical', 'Urgent', 'Standard', 'Routine'];
+  doctorData: string[] = ['Burger', 'Roi', 'John']; // Example list of doctors
+  patientStore = inject(PatientStore);
+  constructor(private fb: FormBuilder,private dialogService: DialogService) {
     effect(() => {
       const data = this.patientData();
       if(data && this.isPatient(data)){
@@ -85,20 +87,13 @@ export class PatientComponent implements OnInit {
   // Method to handle form submission
   onSubmit(): void {
     if (this.patientForm.valid) {
-    // Get the form value, including the disabled Id
-    const formValue = { ...this.patientForm.getRawValue() };
-
-    // Merge with non-form properties if needed (like 'Records')
-    const updatedPatient = {
-      ...this.patientData, // Original data
-      ...formValue,         // Form updates
-      // Note: 'Records' remains as it was since it wasn't in the form
-    };
-
-    console.log('Updated Patient Data:', updatedPatient);
-    // Here you would typically call a service to save the data
-  } else {
-    console.log('Form is invalid. Please check the required fields.');
+      // Get the form value, including the disabled Id
+      const patient = { ...this.patientForm.getRawValue() };
+      console.log(patient)
+      this.patientStore.updatePatient(patient);
+    } else {
+      console.log('error')
+    }
+    this.dialogService.showDialog(null,false)
   }
-}
 }

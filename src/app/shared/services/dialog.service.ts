@@ -8,8 +8,10 @@ import {Entity, Patient} from '../../datasource';
 export class DialogService {
   public show: Subject<any> = new Subject<boolean>();
   dialogData: Subject<{ type:'Patient'|'Staff', data:Entity }> = new Subject<{ type:'Patient'|'Staff', data:Entity }>();
-  showDialog(context: { type:'Patient'|'Staff', data:Entity },value: boolean): void {
+  showDialog(context: { type:'Patient'|'Staff', data:Entity }|null,value: boolean): void {
     this.show.next(value);
-    this.dialogData.next(context);
+    if(context){
+      this.dialogData.next(context);
+    }
   }
 }
