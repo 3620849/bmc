@@ -41,7 +41,7 @@ export class DepartmentFlowComponent implements AfterViewInit,OnDestroy, OnInit 
   subscribeOnSearch (){
     let searchQuery: Query = new Query();
     this.searchService.searchValue.subscribe(value => {
-      searchQuery = new Query().search(value, ['Id', 'Name', "Doctor"], 'contains', true);
+      searchQuery = new Query().search(value, ['Id', 'Name', "Doctor","Status"], 'contains', true);
       (this.kanban as KanbanComponent).query = searchQuery;
     })
   }

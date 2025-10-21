@@ -39,7 +39,7 @@ private subscriptions: Subscription[] = [];
   subscribeOnSearch (){
     let searchQuery: Query = new Query();
     this.searchService.searchValue.subscribe(value => {
-      searchQuery = new Query().search(value, ['Id', 'Name', "Doctor"], 'contains', true);
+      searchQuery = new Query().search(value, ['Id', 'Name', "Doctor","Status"], 'contains', true);
       (this.grid as GridComponent).query = searchQuery;
     })
   }
