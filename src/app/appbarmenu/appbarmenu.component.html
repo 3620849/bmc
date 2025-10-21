@@ -1,0 +1,4 @@
+<div class="control-container">
+  <button *ngFor="let item of list" [routerLink]="item.route">{{ item.name}}</button>
+  <input type="text" placeholder="search">
+</div>

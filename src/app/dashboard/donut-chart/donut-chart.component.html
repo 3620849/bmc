@@ -1,0 +1,8 @@
+<ejs-accumulationchart   #pie style='display:block;  width: 92%' [tooltip]="tooltip" [centerLabel]="centerLabel" [legendSettings]="legendSettings"
+                       (load)='load($event)' [enableBorderOnMouseMove]='false'>
+  <e-accumulation-series-collection>
+    <e-accumulation-series name='Project' [dataSource]='data' xName='x' yName='y' [border]="border" [startAngle]="startAngle" innerRadius="65%" [radius]="radius"
+                           [dataLabel]="dataLabel" borderRadius='3'>
+    </e-accumulation-series>
+  </e-accumulation-series-collection>
+</ejs-accumulationchart>
