@@ -1,11 +1,12 @@
 import {AfterViewInit, Component, effect, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {kanbanData} from '../datasource';
-import {CardSettingsModel, KanbanComponent, KanbanModule} from '@syncfusion/ej2-angular-kanban';
+import {CardSettingsModel, DialogEventArgs, KanbanComponent, KanbanModule} from '@syncfusion/ej2-angular-kanban';
 import { DataManager } from '@syncfusion/ej2-data';
 import {PatientsService} from '../shared/services/patients.service';
 import {Subscription, take} from 'rxjs';
 import {SearchService} from '../shared/services/search.service';
 import { Query } from '@syncfusion/ej2-data';
+import {DialogService} from '../shared/services/dialog.service';
 @Component({
   selector: 'app-department-flow',
   imports: [KanbanModule],
@@ -28,12 +29,12 @@ export class DepartmentFlowComponent implements AfterViewInit,OnDestroy, OnInit 
   };
   private subscriptions: Subscription[] = [];
 
-  constructor(private patientService:PatientsService, private searchService: SearchService) {
+  constructor(private patientService:PatientsService, private searchService: SearchService,private dialogSrv:DialogService) {
   }
 
   ngOnInit(): void {
 
-    }
+  }
 
   ngOnDestroy(): void {
         this.subscriptions.forEach(subscription => subscription.unsubscribe());
@@ -47,9 +48,18 @@ export class DepartmentFlowComponent implements AfterViewInit,OnDestroy, OnInit 
   }
   loadData () {
       this.patientService.loadPatients();
-      this.subscriptions.push(this.patientService.patientsData.subscribe((res)=>{
-        const kanban: KanbanComponent  = this.kanban as KanbanComponent;
-        kanban.dataSource = res;
-      }))
+    this.patientService.patientsData.pipe(take(1)).subscribe((res)=>{
+      const kanban: KanbanComponent  = this.kanban as KanbanComponent;
+      kanban.dataSource = res;
+    })
+  }
+
+  openPatientCard($data:any){
+    console.log($data);
+    this.dialogSrv.showDialog($data,true);
+  }
+
+  clickItem( args: DialogEventArgs): void {
+    args.cancel = true;
   }
 }

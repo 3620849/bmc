@@ -1,4 +1,4 @@
-<ejs-kanban #Kanban keyField='Status' [dataSource]='dataManager' [cardSettings]='cardSettings'>
+<ejs-kanban #Kanban keyField='Status' (dialogOpen)='clickItem($event)' [dataSource]='dataManager' [cardSettings]='cardSettings'>
   <e-columns>
     <e-column headerText='Emergency' keyField='Emergency'></e-column>
     <e-column headerText='ICU' keyField='ICU'></e-column>
@@ -6,8 +6,8 @@
     <e-column headerText='Outpatient' keyField='Outpatient'></e-column>
     <e-column headerText='Radiology' keyField='Radiology'></e-column>
   </e-columns>
-  <ng-template #cardSettingsTemplate let-data>
-    <div class='e-card-content'>
+  <ng-template #cardSettingsTemplate let-data >
+    <div class='e-card-content' (dblclick)="openPatientCard(data)">
       <table class="card-template-wrap">
         <tbody>
         <tr>

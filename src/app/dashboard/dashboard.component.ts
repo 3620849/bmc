@@ -11,6 +11,7 @@ import {DonutChartComponent} from './donut-chart/donut-chart.component';
 @Component({
   selector: 'app-dashboard',
   imports: [DonutChartComponent],
+  standalone:true,
   templateUrl: './dashboard.component.html',
   styleUrl: './dashboard.component.scss'
 })

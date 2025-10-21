@@ -8,3 +8,9 @@
   border: 1px solid black;
   height: calc( 100% - 2px);
 }
+#dialog-container{
+  position: absolute;
+  top: 50px;
+  left: 50%;
+  height: 400px
+}

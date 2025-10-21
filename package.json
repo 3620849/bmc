@@ -22,6 +22,7 @@
     "@syncfusion/ej2-angular-grids": "^31.2.2",
     "@syncfusion/ej2-angular-kanban": "^31.2.2",
     "@syncfusion/ej2-angular-navigations": "^31.2.2-ngcc",
+    "@syncfusion/ej2-angular-popups": "^31.2.2",
     "rxjs": "~7.8.0",
     "tslib": "^2.3.0",
     "zone.js": "~0.15.0"
