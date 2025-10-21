@@ -20,7 +20,7 @@
         </tr>
         <tr>
           <td class="CardHeader">PatientStatus:{{data.PatientStatus}}</td>
-          <td></td>
+          <td class="dot" [ngStyle]="{'color':(data?.PatientStatus ? colorStatusMap[data?.PatientStatus]:'black')}">•</td>
         </tr>
         <tr>
           <td class="CardHeader">Doctor:{{data.Doctor}}</td>

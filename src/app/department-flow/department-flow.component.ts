@@ -7,9 +7,10 @@ import { Query } from '@syncfusion/ej2-data';
 import {DialogService} from '../shared/services/dialog.service';
 import {PatientStore} from '../shared/store/patient.store';
 import {getState} from '@ngrx/signals';
+import {NgStyle} from '@angular/common';
 @Component({
   selector: 'app-department-flow',
-  imports: [KanbanModule],
+  imports: [KanbanModule, NgStyle],
   standalone:true,
   templateUrl: './department-flow.component.html',
   styleUrl: './department-flow.component.scss'
@@ -26,6 +27,13 @@ export class DepartmentFlowComponent implements AfterViewInit,OnDestroy, OnInit 
   public settings: CardSettingsModel = {
     headerField: 'Id'
   };
+  colorStatusMap:any = {
+    'Admission': '#2f38b7',
+    'In Treatment' : '#a8c7fa',
+    'Waiting':'#9fe110',
+    'Discharged':'#79705c',
+    'Critical':'#ff0000'
+  }
   constructor(private searchService: SearchService,
               private dialogSrv:DialogService) {
     effect(() => {

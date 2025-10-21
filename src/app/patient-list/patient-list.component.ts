@@ -1,19 +1,17 @@
-import {AfterViewInit, Component, effect, inject, OnDestroy, OnInit, ViewChild} from '@angular/core';
+import {Component, effect, inject, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {GridComponent, GridModule} from '@syncfusion/ej2-angular-grids';
 import {Entity, kanbanData, Patient} from '../datasource';
-import {CardSettingsModel, KanbanComponent} from '@syncfusion/ej2-angular-kanban';
-import {DataManager, Query} from '@syncfusion/ej2-data';
+import {Query} from '@syncfusion/ej2-data';
 import {Subject, Subscription, takeUntil} from 'rxjs';
-import {PatientsService} from '../shared/services/patients.service';
 import {SearchService} from '../shared/services/search.service';
 import {PatientStore} from '../shared/store/patient.store';
 import {getState} from '@ngrx/signals';
 import {DialogService} from '../shared/services/dialog.service';
-import {JsonPipe} from '@angular/common';
+import {NgStyle} from '@angular/common';
 
 @Component({
   selector: 'app-patient-list',
-  imports: [GridModule, JsonPipe],
+  imports: [GridModule, NgStyle],
   standalone: true,
   templateUrl: './patient-list.component.html',
   styleUrl: './patient-list.component.scss'
@@ -24,7 +22,13 @@ export class PatientListComponent implements OnDestroy, OnInit {
   private $destroy = new Subject<boolean>();
 
 public dataList: Patient[] =[];
-
+  colorStatusMap:any = {
+    'Admission': '#2f38b7',
+    'In Treatment' : '#a8c7fa',
+    'Waiting':'#9fe110',
+    'Discharged':'#79705c',
+    'Critical':'#ff0000'
+  }
 
 private subscriptions: Subscription[] = [];
   public patientStore = inject(PatientStore);
