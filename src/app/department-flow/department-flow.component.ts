@@ -4,7 +4,8 @@ import {CardSettingsModel, KanbanComponent, KanbanModule} from '@syncfusion/ej2-
 import { DataManager } from '@syncfusion/ej2-data';
 import {PatientsService} from '../shared/services/patients.service';
 import {Subscription, take} from 'rxjs';
-
+import {SearchService} from '../shared/services/search.service';
+import { Query } from '@syncfusion/ej2-data';
 @Component({
   selector: 'app-department-flow',
   imports: [KanbanModule],
@@ -12,10 +13,11 @@ import {Subscription, take} from 'rxjs';
   templateUrl: './department-flow.component.html',
   styleUrl: './department-flow.component.scss'
 })
-export class DepartmentFlowComponent implements AfterViewInit,OnDestroy {
+export class DepartmentFlowComponent implements AfterViewInit,OnDestroy, OnInit {
 
   ngAfterViewInit(): void {
     this.loadData();
+    this.subscribeOnSearch();
   }
   @ViewChild('Kanban') public kanban?: KanbanComponent;
   public dataManager?: DataManager;
@@ -26,11 +28,22 @@ export class DepartmentFlowComponent implements AfterViewInit,OnDestroy {
   };
   private subscriptions: Subscription[] = [];
 
-  constructor(private patientService:PatientsService) {
+  constructor(private patientService:PatientsService, private searchService: SearchService) {
   }
+
+  ngOnInit(): void {
+
+    }
 
   ngOnDestroy(): void {
         this.subscriptions.forEach(subscription => subscription.unsubscribe());
+  }
+  subscribeOnSearch (){
+    let searchQuery: Query = new Query();
+    this.searchService.searchValue.subscribe(value => {
+      searchQuery = new Query().search(value, ['Id', 'Summary'], 'contains', true);
+      (this.kanban as KanbanComponent).query = searchQuery;
+    })
   }
   loadData () {
       this.patientService.loadPatients();
