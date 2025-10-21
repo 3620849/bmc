@@ -1,4 +1,4 @@
-<ejs-kanban #Kanban keyField='Status' (dialogOpen)='clickItem($event)' [dataSource]='dataManager' [cardSettings]='cardSettings'>
+<ejs-kanban #Kanban keyField='Status' (dialogOpen)='clickItem($event)' [dataSource]='patientStore.patients()' >
   <e-columns>
     <e-column headerText='Emergency' keyField='Emergency'></e-column>
     <e-column headerText='ICU' keyField='ICU'></e-column>
