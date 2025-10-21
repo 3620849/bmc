@@ -1,17 +1,17 @@
 import {Injectable, signal, WritableSignal} from '@angular/core';
 import {kanbanData, Patient} from '../../datasource';
+import {BehaviorSubject} from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
 })
 export class PatientsService {
-  patientsData: WritableSignal<{status:'done'|'error'|'progress', data:Patient[] }> = signal({status:'done', data:[]})
+  patientsData: BehaviorSubject<Patient[]> = new BehaviorSubject<Patient[]>([]);
   constructor() { }
   loadPatients(): void {
     //mocking server load
-    this.patientsData.set({status:'progress', data:[]});
     setTimeout(()=>{
-      this.patientsData.set({status:'done', data:kanbanData});
+      this.patientsData.next(kanbanData)
     },1000)
   }
 }

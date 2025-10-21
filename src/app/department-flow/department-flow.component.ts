@@ -1,8 +1,9 @@
-import {AfterViewInit, Component, effect, OnInit, ViewChild} from '@angular/core';
+import {AfterViewInit, Component, effect, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {kanbanData} from '../datasource';
 import {CardSettingsModel, KanbanComponent, KanbanModule} from '@syncfusion/ej2-angular-kanban';
 import { DataManager } from '@syncfusion/ej2-data';
 import {PatientsService} from '../shared/services/patients.service';
+import {Subscription, take} from 'rxjs';
 
 @Component({
   selector: 'app-department-flow',
@@ -11,8 +12,8 @@ import {PatientsService} from '../shared/services/patients.service';
   templateUrl: './department-flow.component.html',
   styleUrl: './department-flow.component.scss'
 })
-export class DepartmentFlowComponent implements AfterViewInit {
-  loaded:boolean = false;
+export class DepartmentFlowComponent implements AfterViewInit,OnDestroy {
+
   ngAfterViewInit(): void {
     this.loadData();
   }
@@ -23,17 +24,19 @@ export class DepartmentFlowComponent implements AfterViewInit {
     contentField: 'Summary',
     headerField: 'Id'
   };
-
-  loadData (){
-    if(!this.loaded){
-      this.patientService.loadPatients();
-    }
-  }
+  private subscriptions: Subscription[] = [];
 
   constructor(private patientService:PatientsService) {
-    effect(() => {
-      const kanban: KanbanComponent  = this.kanban as KanbanComponent;
-      kanban.dataSource = this.patientService.patientsData().data;
-    });
+  }
+
+  ngOnDestroy(): void {
+        this.subscriptions.forEach(subscription => subscription.unsubscribe());
+  }
+  loadData () {
+      this.patientService.loadPatients();
+      this.subscriptions.push(this.patientService.patientsData.subscribe((res)=>{
+        const kanban: KanbanComponent  = this.kanban as KanbanComponent;
+        kanban.dataSource = res;
+      }))
   }
 }
