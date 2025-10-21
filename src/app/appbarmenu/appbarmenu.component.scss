@@ -1,8 +1,9 @@
+@use 'variables' as *;
 .control-container{
   width: 100%;
 
   .nav-button{
-    background-color: #4CAF50; /* Green background */
+    background-color: $green-btn; /* Green background */
     color: white; /* White text */
     padding: 10px 20px; /* Spacing inside the button */
     border: none; /* No border */
@@ -15,16 +16,41 @@
     margin: 5px;
   }
   .nav-button:hover {
-    background-color: #45a049; /* Darker green on hover */
+    background-color: $green-dark-btn; /* Darker green on hover */
   }
 
   .nav-button:active {
-    background-color: #3e8e41; /* Even darker green when clicked */
+    background-color: $green-darker-btn; /* Even darker green when clicked */
     transform: translateY(1px); /* Slight downward shift when clicked */
   }
 
   .nav-button:focus {
     outline: none; /* Removes default browser outline */
     box-shadow: 0 0 0 3px rgba(76, 175, 80, 0.5); /* Custom focus indicator */
+  }
+  .search-input {
+    width: 300px;
+    height: 14px;
+    padding: 12px 20px;
+    border: 1px solid $input-border-color;
+    border-radius: $border-radius;
+    background-color: $input-bg-color;
+    font-size: 16px;
+    color: $input-text-color;
+
+    // Smoothen state changes
+    transition: border-color $transition-speed, box-shadow $transition-speed;
+
+    // Placeholder styling
+    &::placeholder {
+      color: $input-placeholder-color;
+    }
+
+    // Focus state for clear feedback
+    &:focus {
+      outline: none; // Removes default browser outline
+      border-color: $input-focus-color;
+      box-shadow: 0 0 0 3px rgba($input-focus-color, 0.3); // Creates a soft glow effect
+    }
   }
 }
