@@ -28,13 +28,14 @@ export class AppbarmenuComponent {
     this.searchService.search($event.target.value)
   }
   addPatient(){
+
     const data:Patient = {
         Id: -1,
         Name:'',
-        Status: "General Ward",
-        PatientStatus:"Waiting",
+        Status: "",
+        PatientStatus:"",
         Summary: '',
-        Priority: 'Routine',
+        Priority: '',
         Records:[],
         Doctor:"",
         Bed:'',

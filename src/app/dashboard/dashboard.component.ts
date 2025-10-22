@@ -21,6 +21,8 @@ export class DashboardComponent {
   public patientStatusData: Object[] = [];
   public departmentCapacityData: Object[] = [];
   public priorityData: Object[] = [];
+  public averageWaiting:number = 0;
+  public averageInTreatment:number = 0;
   patientStore = inject(PatientStore);
   constructor() {
     effect(() => {
@@ -28,6 +30,8 @@ export class DashboardComponent {
       this.patientStatusData = this.createStatusPercentageChartData(state.patients,'PatientStatus');
       this.departmentCapacityData = this.createStatusPercentageChartData(state.patients,'Status');
       this.priorityData = this.createStatusPercentageChartData(state.patients,'Priority');
+      this.averageWaiting = this.calculateAverageStatusTime(state.patients,'Waiting');
+      this.averageInTreatment = this.calculateAverageStatusTime(state.patients,'In Treatment');
     });
   };
   createStatusPercentageChartData(
@@ -92,4 +96,25 @@ export class DashboardComponent {
 
     return chartData;
   }
+
+  calculateAverageStatusTime(patients: Patient[],key:string){
+    const totalPatients = patients.length;
+    let patientWaitingTime = 0
+    patients.forEach(patient => {
+
+      for(let i = 0; i<patient.StatusTracking.length;++i){
+        if(patient.StatusTracking[i].PatientStatus === key){
+          if(i+1>=patient.StatusTracking.length){
+            let time = new Date().getTime() - new Date(patient.StatusTracking[i].timeStart).getTime();
+            patientWaitingTime += time;
+          }else {
+            let time = new Date(patient.StatusTracking[i+1].timeStart).getTime() - new Date(patient.StatusTracking[i].timeStart).getTime();
+            patientWaitingTime += time;
+          }
+        }
+      }
+    })
+    return +(patientWaitingTime/totalPatients/(1000*60)).toFixed(2);
+  }
+
 }

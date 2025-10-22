@@ -3,10 +3,10 @@ export interface Entity {
   Name:string;
 }
 export interface Patient extends Entity {
-  Status: 'Emergency'|'ICU'|'General Ward'|'Outpatient'|'Radiology',
-  PatientStatus:'Admission'|'In Treatment'| 'Waiting'| 'Discharged'| 'Critical'
+  Status: 'Emergency'|'ICU'|'General Ward'|'Outpatient'|'Radiology'|'',
+  PatientStatus:'Admission'|'In Treatment'| 'Waiting'| 'Discharged'| 'Critical'|''
   Summary:string;
-  Priority:'Critical'| 'Urgent'| 'Standard'| 'Routine';
+  Priority:'Critical'| 'Urgent'| 'Standard'| 'Routine'|'';
   Records:[],
   Doctor:string,
   Bed:string;
