@@ -1,4 +1,5 @@
 <div class="control-container">
   <button class="nav-button" *ngFor="let item of list" [routerLink]="item.route">{{ item.name}}</button>
   <input class ="search-input" type="text" (keyup)="search($event)" placeholder="search">
+  <button class="nav-button" (click)="addPatient()">Add Patient</button>
 </div>

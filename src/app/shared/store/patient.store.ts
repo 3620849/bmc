@@ -29,6 +29,10 @@ export const PatientStore = signalStore(
       const updatedPatients = store.patients().map(p =>
         p.Id === patient.Id ? patient : p
       );
+      if(patient.Id === -1){
+        patient.Id = Date.now();
+        updatedPatients.push(patient);
+      }
       patchState(store,{patients:updatedPatients,loading:false});
     }
   }))
