@@ -1,37 +1,29 @@
-import { Component } from '@angular/core';
+import {AfterViewInit, Component, Input, input, OnInit, ViewChild} from '@angular/core';
 import {
-  AccumulationChartAllModule,
+  AccumulationChartAllModule, AccumulationChartComponent,
   ChartAllModule,
-  ChartModule, IAccLoadedEventArgs,
-  LegendSettingsModel,
-  TooltipSettingsModel
+  IAccLoadedEventArgs,
 } from '@syncfusion/ej2-angular-charts';
 import {loadAccumulationChartTheme} from '../../theme-colors';
 @Component({
   selector: 'app-donut-chart',
   imports: [
-    ChartAllModule,AccumulationChartAllModule
+    ChartAllModule, AccumulationChartAllModule
   ],
   standalone: true,
   templateUrl: './donut-chart.component.html',
   styleUrl: './donut-chart.component.scss'
 })
-export class DonutChartComponent {
-  public data: Object[] = [
-    { x: 'Chrome', y: 63.5, DataLabelMappingName: 'Chrome: 63.5%' },
-    { x: 'Safari', y: 25.0, DataLabelMappingName: 'Safari: 25.0%' },
-    { x: 'Samsung Internet', y: 6.0, DataLabelMappingName: 'Samsung Internet: 6.0%' },
-    { x: 'UC Browser', y: 2.5, DataLabelMappingName: 'UC Browser: 2.5%' },
-    { x: 'Opera', y: 1.5, DataLabelMappingName: 'Opera: 1.5%' },
-    { x: 'Others', y: 1.5, DataLabelMappingName: 'Others: 1.5%' }
-  ];
+export class DonutChartComponent implements AfterViewInit {
+  @ViewChild('pie') pie!: AccumulationChartComponent;
+  @Input() title!: string;
+  @Input() id!: string;
+  @Input() data!: Object[];
   //Initializing Legend
   public legendSettings: Object = {
     visible: false,
   };
   public centerLabel: Object = {
-    text: 'Mobile<br>Browser<br>Statistics<br>2024',
-    hoverTextFormat: '${point.x}<br>Browser Share<br>${point.y}%',
     textStyle: {
       fontWeight: '600',
       size:   '15px'
@@ -69,5 +61,14 @@ export class DonutChartComponent {
   public startAngle: number =  60;
   constructor() {
     //code
+  }
+
+  ngAfterViewInit(): void {
+    if(this.pie){
+      this.pie.centerLabel.text=this.title;
+      setTimeout(()=>{
+        this.pie.refreshChart();
+      });
+    }
   };
 }

@@ -1,13 +1,15 @@
-import { Component } from '@angular/core';
-import {
-  AccumulationChartAllModule,
-  ChartAllModule,
-  ChartModule, IAccLoadedEventArgs,
-  LegendSettingsModel,
-  TooltipSettingsModel
-} from '@syncfusion/ej2-angular-charts';
+import {Component, effect, inject} from '@angular/core';
 import { loadAccumulationChartTheme } from '../theme-colors';
 import {DonutChartComponent} from './donut-chart/donut-chart.component';
+import {PatientStore} from '../shared/store/patient.store';
+import {getState} from '@ngrx/signals';
+import {Patient} from '../datasource';
+interface ChartDataPoint {
+  x: string; // The PatientStatus value (e.g., 'Admission')
+  y: number; // The percentage (e.g., 60)
+  DataLabelMappingName: string; // The formatted label (e.g., 'Admission: 60%')
+}
+type PatientKey = keyof Pick<Patient, 'Status' | 'PatientStatus' | 'Priority'>;
 @Component({
   selector: 'app-dashboard',
   imports: [DonutChartComponent],
@@ -16,57 +18,78 @@ import {DonutChartComponent} from './donut-chart/donut-chart.component';
   styleUrl: './dashboard.component.scss'
 })
 export class DashboardComponent {
-  public data: Object[] = [
-    { x: 'Chrome', y: 63.5, DataLabelMappingName: 'Chrome: 63.5%' },
-    { x: 'Safari', y: 25.0, DataLabelMappingName: 'Safari: 25.0%' },
-    { x: 'Samsung Internet', y: 6.0, DataLabelMappingName: 'Samsung Internet: 6.0%' },
-    { x: 'UC Browser', y: 2.5, DataLabelMappingName: 'UC Browser: 2.5%' },
-    { x: 'Opera', y: 1.5, DataLabelMappingName: 'Opera: 1.5%' },
-    { x: 'Others', y: 1.5, DataLabelMappingName: 'Others: 1.5%' }
-  ];
-  //Initializing Legend
-  public legendSettings: Object = {
-    visible: false,
-  };
-  public centerLabel: Object = {
-    text: 'Mobile<br>Browser<br>Statistics<br>2024',
-    hoverTextFormat: '${point.x}<br>Browser Share<br>${point.y}%',
-    textStyle: {
-      fontWeight: '600',
-      size:   '15px'
-    },
-  };
-  //Initializing DataLabel
-  public dataLabel: Object = {
-    visible: true,
-    name: 'DataLabelMappingName',
-    position: 'Outside',
-    font: {
-      fontWeight: '600',
-      size:  '12px'
-    },
-    connectorStyle: {
-      length:  '20px',
-      type: 'Curve'
-    },
-  };
-  public border: object = {
-    width: 1, color: '#ffffff'
-  };
-  public tooltip: Object = {
-    enable: true,
-    enableHighlight: true,
-    format: '<b>${point.x}</b><br>Browser Share: <b>${point.y}%</b>',
-    header:'',
-  };
-  // custom code start
-  public load(args: IAccLoadedEventArgs): void {
-    loadAccumulationChartTheme(args);
-  };
-  // custom code end
-  public radius: string = '70%'
-  public startAngle: number =  60;
+  public patientStatusData: Object[] = [];
+  public departmentCapacityData: Object[] = [];
+  public priorityData: Object[] = [];
+  patientStore = inject(PatientStore);
   constructor() {
-    //code
+    effect(() => {
+      const state = getState(this.patientStore);
+      this.patientStatusData = this.createStatusPercentageChartData(state.patients,'PatientStatus');
+      this.departmentCapacityData = this.createStatusPercentageChartData(state.patients,'Status');
+      this.priorityData = this.createStatusPercentageChartData(state.patients,'Priority');
+    });
   };
+  createStatusPercentageChartData(
+    patients: Patient[],
+    key: PatientKey
+  ): ChartDataPoint[] {
+    if (!patients || patients.length === 0) {
+      return [];
+    }
+
+    // 1. Get the total number of patients
+    const totalPatients = patients.length;
+
+    // 2. Count the occurrences of the specified key's value
+    const statusCounts = patients.reduce((acc, patient) => {
+      // Dynamically access the property using the passed 'key' argument
+      const statusValue = patient[key];
+
+      // Type check: ensure the value is a string (which it is for the specified keys)
+      if (typeof statusValue === 'string') {
+        acc[statusValue] = (acc[statusValue] || 0) + 1;
+      }
+      return acc;
+    }, {} as Record<string, number>);
+
+    // 3. Convert counts to percentages and format the output (using remainder distribution for 100% sum)
+    let chartData: ChartDataPoint[] = [];
+
+    const statusPercentages: Record<string, number> = {};
+    let totalPercentageSum = 0;
+
+    // First pass: Calculate percentage and store the floor value
+    for (const value in statusCounts) {
+      const count = statusCounts[value];
+      const exactPercentage = (count / totalPatients) * 100;
+      const basePercentage = Math.floor(exactPercentage);
+
+      statusPercentages[value] = basePercentage;
+      totalPercentageSum += basePercentage;
+    }
+
+    // Determine the remaining points needed to reach 100%
+    let remainder = 100 - totalPercentageSum;
+
+    // Second pass: Distribute the remainder to the largest statuses
+    const sortedValues = Object.keys(statusCounts).sort((a, b) => statusCounts[b] - statusCounts[a]);
+
+    for (const value of sortedValues) {
+      if (remainder > 0) {
+        statusPercentages[value] += 1; // Add one to the percentage
+        remainder--; // Decrement the remainder
+      }
+
+      // Create the final object format
+      const percentage = statusPercentages[value];
+      chartData.push({
+        x: value,
+        y: percentage,
+        DataLabelMappingName: `${value}: ${percentage}%`,
+      });
+    }
+
+    return chartData;
+  }
 }

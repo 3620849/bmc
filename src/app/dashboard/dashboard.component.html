@@ -1,13 +1,12 @@
 <div class="dashboard-component">
   <div class="chart">
-    <div></div>
-    <app-donut-chart></app-donut-chart>
+    <app-donut-chart [title]="'Patient Status'"  [data]="patientStatusData"  [id]="'a'"></app-donut-chart>
   </div>
   <div class="chart">
-    <app-donut-chart></app-donut-chart>
+    <app-donut-chart [title]="'Departments capacity'" [data]="departmentCapacityData" [id]="'b'"></app-donut-chart>
   </div>
   <div class="chart">
-    <app-donut-chart></app-donut-chart>
+    <app-donut-chart [title]="'Priority'" [data]="priorityData" [id]="'c'"></app-donut-chart>
   </div>
 
 </div>
