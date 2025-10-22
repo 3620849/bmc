@@ -10,6 +10,9 @@ export interface Patient extends Entity {
   Records:[],
   Doctor:string,
   Bed:string;
+  StatusTracking:[{PatientStatus:string,timeStart:string}]|[],
+  LastStatusUpdate:string;
+  LastStatus:string;
 }
 export let kanbanData: Patient[] = [
   {
@@ -22,6 +25,9 @@ export let kanbanData: Patient[] = [
     Records:[],
     Doctor:"Roi",
     Bed:'A1',
+    StatusTracking:[{PatientStatus:'Admission',timeStart: new Date().toString()}],
+    LastStatus: 'Admission',
+    LastStatusUpdate: new Date().toString()
   },
   {
     Id: 2,
@@ -33,6 +39,9 @@ export let kanbanData: Patient[] = [
     Records:[],
     Doctor:'Burger',
     Bed:"A2",
+    StatusTracking:[{PatientStatus:'Waiting',timeStart: new Date().toString()}],
+    LastStatus: 'Waiting',
+    LastStatusUpdate: new Date().toString()
   },
   {
     Id: 3,
@@ -44,6 +53,9 @@ export let kanbanData: Patient[] = [
     Records:[],
     Doctor:"Roi",
     Bed:"B1",
+    StatusTracking:[{PatientStatus:'Discharged',timeStart: new Date().toString()}],
+    LastStatus: 'Discharged',
+    LastStatusUpdate: new Date().toString()
   }
 ];
 

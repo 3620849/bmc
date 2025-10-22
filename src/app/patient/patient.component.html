@@ -59,8 +59,12 @@
                      rows="2">
         </ejs-textbox>
       </div>
+      <ejs-textbox placeholder="Log"  [value]="statusTracking|json" [enabled]="false" floatLabelType="Auto" multiline="true"
+                   rows="4">
+      </ejs-textbox>
       <button type="submit" [disabled]="!patientForm.valid" ejs-button cssClass="e-flat" content="OK"></button>
     </form>
+
   </div>
 
 </div>

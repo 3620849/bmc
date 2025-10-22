@@ -1,6 +1,6 @@
 import {Component, computed, effect, inject, input, OnInit} from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser'
-import {NgIf} from '@angular/common';
+import {JsonPipe, NgIf} from '@angular/common';
 import {Entity, Patient} from '../datasource';
 import {
   FormBuilder,
@@ -36,7 +36,8 @@ import {
     GridModule,
     AutoCompleteModule,
     MultiSelectModule,
-    FormsModule
+    FormsModule,
+    JsonPipe
   ],
   providers: [EditService, ToolbarService, SortService, PageService],
   standalone: true,
@@ -70,11 +71,17 @@ export class PatientComponent implements OnInit {
       showSpinButton: false
     }
   }
+  lastPatientStatus:string = 'none';
+  lastStatusUpdate:string = new Date().toString();
+  statusTracking:[{PatientStatus:string,timeStart:string}]|[] = [];
   constructor(private fb: FormBuilder,private dialogService: DialogService) {
     effect(() => {
       const data = this.patientData();
       if(data && this.isPatient(data)){
         this.recordsData = data.Records;
+        this.lastPatientStatus = data.LastStatus;
+        this.lastStatusUpdate = data.LastStatusUpdate;
+        this.statusTracking = data.StatusTracking;
         this.patientForm = new FormGroup({
           Id: new FormControl<number>({ value: data.Id, disabled: true },[]), // ID is usually read-only
           Name: new FormControl<string>(data.Name, [Validators.required]),
@@ -116,7 +123,13 @@ export class PatientComponent implements OnInit {
   onSubmit(): void {
     if (this.patientForm.valid) {
       // Get the form value, including the disabled Id
-      const patient = { ...this.patientForm.getRawValue() };
+      const patient = { ...this.patientForm.getRawValue(),LastPatientStatus:this.lastPatientStatus,LastStatusUpdate:this.lastStatusUpdate,StatusTracking:this.statusTracking };
+      if(this.lastPatientStatus !== patient.PatientStatus){
+        const timeNow = new Date().toString();
+        patient.StatusTracking.push({PatientStatus:patient.PatientStatus,timeStart:timeNow});
+        patient.LastStatus = patient.PatientStatus;
+        patient.LastStatusUpdate = timeNow;
+      }
       patient.Records = this.recordsData;
       this.patientStore.updatePatient(patient);
     } else {
