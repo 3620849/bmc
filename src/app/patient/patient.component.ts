@@ -77,7 +77,7 @@ export class PatientComponent implements OnInit {
   constructor(private fb: FormBuilder,private dialogService: DialogService) {
     effect(() => {
       const data = this.patientData();
-      if(data && this.isPatient(data)){
+      if(data && this.isPatient(data) && data.Id !== -1){
         this.recordsData = data.Records;
         this.lastPatientStatus = data.LastStatus;
         this.lastStatusUpdate = data.LastStatusUpdate;
@@ -135,6 +135,7 @@ export class PatientComponent implements OnInit {
     } else {
       console.log('error')
     }
+    this.dialogService.showDialog({type:"Staff",data: {Id:1,Name:''}},true);
     this.dialogService.showDialog(null,false)
   }
   beforePaste(event:any){
